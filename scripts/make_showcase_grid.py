@@ -11,6 +11,7 @@ scenes = [
     ("04 Neon Night", "outputs/showcase_04_neon.png"),
     ("05 Geometric Forest", "outputs/showcase_05_forest.png"),
     ("06 Cornell Box", "outputs/showcase_06_cornell.png"),
+    ("07 Innovation Harbor", "outputs/showcase_07_innovation_harbor.png"),
 ]
 
 GRID_W = 500
@@ -18,7 +19,7 @@ GRID_H = 500
 TITLE_H = 50
 LABEL_H = 35
 MARGIN = 15
-COLS = 3
+COLS = 4
 ROWS = 2
 
 total_w = COLS * GRID_W + (COLS + 1) * MARGIN
