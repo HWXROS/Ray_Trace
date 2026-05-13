@@ -9,12 +9,6 @@ build/
 # Kimi
 .kimi/
 
-# Outputs (generated images)
-outputs/*.png
-outputs/*.jpg
-outputs/*.jpeg
-outputs/anim_test/
-
 # Models (optional, if too large)
 # models/
 
