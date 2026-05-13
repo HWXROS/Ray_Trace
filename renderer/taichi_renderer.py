@@ -1128,7 +1128,9 @@ class TaichiRenderer:
                 print(f"[BVH] 警告: BVH 节点数 {n} 超过最大值 {self.max_bvh_nodes}，禁用 BVH")
                 self.num_bvh_nodes = 0
             else:
-                self.bvh_nodes = field
+                # 复用已有 field，避免替换 field 对象导致 ti.template() kernel 重新编译
+                for i in range(n):
+                    self.bvh_nodes[i] = field[i]
                 self.num_bvh_nodes = n
                 print(f"[BVH] 构建完成: {n} 个节点 ({self.num_spheres} 球 + {self.num_cubes} 立方体 + {self.num_triangles} 三角形)")
         else:
