@@ -1,0 +1,59 @@
+scene:
+  name: "YAML Demo Scene"
+
+camera:
+  lookfrom: [-2, 2, 1]
+  lookat: [0, 0, -1]
+  vup: [0, 1, 0]
+  vfov: 20.0
+  aspect_ratio: 1.0
+  aperture: 0.0
+
+render:
+  width: 400
+  height: 400
+  samples: 100
+  max_depth: 50
+  use_bvh: true
+  use_nee: true
+
+objects:
+  - type: sphere
+    center: [0, -100.5, -1]
+    radius: 100.0
+    material: lambertian
+    albedo: [0.8, 0.8, 0.0]
+
+  - type: sphere
+    center: [0, 0, -1]
+    radius: 0.5
+    material: lambertian
+    albedo: [0.7, 0.3, 0.3]
+
+  - type: sphere
+    center: [-1.0, 0, -1]
+    radius: 0.5
+    material: metal
+    albedo: [0.8, 0.8, 0.8]
+    fuzz: 0.3
+
+  - type: sphere
+    center: [1.0, 0, -1]
+    radius: 0.5
+    material: dielectric
+    ir: 1.5
+
+animation:
+  enabled: false
+  frames: 60
+  fps: 30
+  camera_path:
+    - frame: 0
+      lookfrom: [-2, 2, 1]
+      lookat: [0, 0, -1]
+    - frame: 30
+      lookfrom: [0, 2, 2]
+      lookat: [0, 0, -1]
+    - frame: 59
+      lookfrom: [2, 2, 1]
+      lookat: [0, 0, -1]
