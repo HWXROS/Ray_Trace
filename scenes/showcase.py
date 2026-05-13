@@ -211,125 +211,129 @@ def scene_cornell_real():
 def scene_innovation_harbor():
     """
     场景7: 西安交通大学创新港微缩模型
-    参考创新港校区中轴线对称布局:
-    - 红棕色回字形教学楼 (力行楼/躬行楼)
-    - 中央玻璃建筑 (涵英楼)
-    - 北部大型教学楼 (泓理楼)
-    - 南部宿舍区
+    严格按照平面图 (../data/6.png) 布局:
+    - 扇形倒三角，北部宽南部窄
+    - 西迁大道中轴线
+    - 黄色=教学科研，粉色=宿舍，绿色=绿地
     """
-    r = TaichiRenderer(max_spheres=80, max_cubes=150, max_triangles=10)
+    r = TaichiRenderer(max_spheres=100, max_cubes=250, max_triangles=10)
     np.random.seed(2024)
 
-    # ========== 大地与道路 ==========
-    # 整个校园绿地
-    r.add_cube((-28, -0.5, -32), (28, 0, 22), MAT_LAMBERTIAN, (0.38, 0.62, 0.32))
-    # 中央景观大道 (灰色)
-    r.add_cube((-4.5, 0.01, -28), (4.5, 0.06, 18), MAT_LAMBERTIAN, (0.62, 0.60, 0.57))
-    # 横向道路 (北)
-    r.add_cube((-25, 0.01, -16), (25, 0.06, -14), MAT_LAMBERTIAN, (0.62, 0.60, 0.57))
-    # 横向道路 (中)
-    r.add_cube((-25, 0.01, -5), (25, 0.06, -3), MAT_LAMBERTIAN, (0.62, 0.60, 0.57))
-    # 横向道路 (南)
-    r.add_cube((-25, 0.01, 5), (25, 0.06, 7), MAT_LAMBERTIAN, (0.62, 0.60, 0.57))
+    C_YELLOW = (0.78, 0.68, 0.42)
+    C_PINK   = (0.88, 0.58, 0.58)
+    C_GREEN  = (0.42, 0.68, 0.38)
+    C_ROAD   = (0.72, 0.70, 0.67)
+    C_SPORT  = (0.35, 0.55, 0.30)
 
-    # ========== 北部 - 泓理楼区域 ==========
-    # 主楼体 (红棕色)
-    r.add_cube((-12, 0, -24), (12, 3.0, -17), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    # 屋顶 (深红色)
-    r.add_cube((-12.2, 3.0, -24.2), (12.2, 3.3, -16.8), MAT_LAMBERTIAN, (0.65, 0.25, 0.18))
-    # 两侧配楼
-    r.add_cube((-16, 0, -23), (-13, 2.0, -18), MAT_LAMBERTIAN, (0.70, 0.32, 0.22))
-    r.add_cube((13, 0, -23), (16, 2.0, -18), MAT_LAMBERTIAN, (0.70, 0.32, 0.22))
+    # ========== 大地 (绿地) ==========
+    r.add_cube((-32, -0.5, -28), (32, 0, 22), MAT_LAMBERTIAN, C_GREEN)
 
-    # ========== 中北部 - B区小建筑群 ==========
-    for i in range(4):
-        x = -10 + i * 2.8
-        r.add_cube((x, 0, -15), (x+1.8, 1.0, -13), MAT_LAMBERTIAN, (0.75, 0.55, 0.50))
-        r.add_cube((-x-1.8, 0, -15), (-x, 1.0, -13), MAT_LAMBERTIAN, (0.75, 0.55, 0.50))
+    # ========== 道路网格 ==========
+    # 纵向 - 西迁大道 (中央)
+    r.add_cube((-1.5, 0.01, -26), (1.5, 0.06, 20), MAT_LAMBERTIAN, C_ROAD)
+    # 纵向 - 西侧
+    r.add_cube((-10, 0.01, -26), (-8, 0.06, 20), MAT_LAMBERTIAN, C_ROAD)
+    r.add_cube((-18, 0.01, -26), (-16, 0.06, 20), MAT_LAMBERTIAN, C_ROAD)
+    r.add_cube((-26, 0.01, -26), (-24, 0.06, 20), MAT_LAMBERTIAN, C_ROAD)
+    # 纵向 - 东侧
+    r.add_cube((8, 0.01, -26), (10, 0.06, 20), MAT_LAMBERTIAN, C_ROAD)
+    r.add_cube((16, 0.01, -26), (18, 0.06, 20), MAT_LAMBERTIAN, C_ROAD)
+    r.add_cube((24, 0.01, -26), (26, 0.06, 20), MAT_LAMBERTIAN, C_ROAD)
+    # 横向
+    for z in [-20, -14, -8, -2, 4, 10, 16]:
+        r.add_cube((-32, 0.01, z-0.4), (32, 0.06, z+0.4), MAT_LAMBERTIAN, C_ROAD)
 
-    # ========== 中部 - 力行楼 & 躬行楼 (回字形对称) ==========
-    # 左侧回字形 - 躬行楼
-    # 上边
-    r.add_cube((-16, 0, -12), (-4, 2.2, -10), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    # 下边
-    r.add_cube((-16, 0, -6), (-4, 2.2, -4), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    # 左边
-    r.add_cube((-16, 0, -10), (-14, 2.2, -6), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    # 右边
-    r.add_cube((-6, 0, -10), (-4, 2.2, -6), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    # 屋顶
-    r.add_cube((-16.2, 2.2, -12.2), (-3.8, 2.5, -3.8), MAT_LAMBERTIAN, (0.65, 0.25, 0.18))
+    # ========== 最北部 - 泓理楼 ==========
+    r.add_cube((-22, 0, 14), (22, 2.5, 19), MAT_LAMBERTIAN, C_YELLOW)
 
-    # 右侧回字形 - 力行楼
-    r.add_cube((4, 0, -12), (16, 2.2, -10), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    r.add_cube((4, 0, -6), (16, 2.2, -4), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    r.add_cube((4, 0, -10), (6, 2.2, -6), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    r.add_cube((14, 0, -10), (16, 2.2, -6), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    r.add_cube((3.8, 2.2, -12.2), (16.2, 2.5, -3.8), MAT_LAMBERTIAN, (0.65, 0.25, 0.18))
+    # ========== B区宿舍 (粉色，泓理楼下方) ==========
+    for i in range(6):
+        x = -20 + i*2.4
+        r.add_cube((x, 0, 8), (x+1.6, 1.0, 10), MAT_LAMBERTIAN, C_PINK)
+        r.add_cube((x, 0, 10.5), (x+1.6, 1.0, 12.5), MAT_LAMBERTIAN, C_PINK)
+    for i in range(6):
+        x = 4 + i*2.4
+        r.add_cube((x, 0, 8), (x+1.6, 1.0, 10), MAT_LAMBERTIAN, C_PINK)
+        r.add_cube((x, 0, 10.5), (x+1.6, 1.0, 12.5), MAT_LAMBERTIAN, C_PINK)
 
-    # 中央 - 涵英楼 (蓝色玻璃建筑)
-    r.add_cube((-2.5, 0, -11), (2.5, 2.8, -5), MAT_DIELECTRIC, ir=1.5)
-    # 玻璃底座
-    r.add_cube((-3.0, 0, -11.5), (3.0, 0.3, -4.5), MAT_METAL, (0.5, 0.5, 0.55), fuzz=0.1)
+    # ========== 涵英楼 (U形，黄色) + 通英楼 ==========
+    r.add_cube((-10, 0, 2), (10, 2.0, 4), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((-10, 0, -2), (10, 2.0, 0), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((-10, 0, -2), (-7, 2.0, 4), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((7, 0, -2), (10, 2.0, 4), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((-16, 0, 0), (-11, 1.8, 3), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((11, 0, 0), (16, 1.8, 3), MAT_LAMBERTIAN, C_YELLOW)
 
-    # ========== 中南部 - C区 + 阅览中心 ==========
-    # 左侧C区
-    for i in range(3):
-        x = -11 + i * 2.5
-        r.add_cube((x, 0, -2), (x+1.8, 1.2, 0), MAT_LAMBERTIAN, (0.78, 0.58, 0.52))
-    # 右侧C区
-    for i in range(3):
-        x = 5.5 + i * 2.5
-        r.add_cube((x, 0, -2), (x+1.8, 1.2, 0), MAT_LAMBERTIAN, (0.78, 0.58, 0.52))
-    # 阅览中心 (东)
-    r.add_cube((10, 0, -2), (15, 1.5, 1), MAT_LAMBERTIAN, (0.70, 0.65, 0.55))
+    # ========== 躬行楼(西) & 力行楼(东) ==========
+    r.add_cube((-18, 0, -8), (-4, 2.5, -4), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((4, 0, -8), (18, 2.5, -4), MAT_LAMBERTIAN, C_YELLOW)
+
+    # ========== 中下部 - 米兰楼/思源楼/博物馆/阅览中心/C区 ==========
+    r.add_cube((-16, 0, -14), (-10, 1.5, -11), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((-9, 0, -14), (-5, 1.5, -11), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((-4, 0, -14), (4, 1.8, -11), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((5, 0, -14), (10, 1.5, -11), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((11, 0, -14), (16, 1.5, -11), MAT_LAMBERTIAN, C_YELLOW)
+    for i in range(5):
+        x = -18 + i*2.2
+        r.add_cube((x, 0, -17), (x+1.5, 1.0, -15.5), MAT_LAMBERTIAN, C_PINK)
+    for i in range(5):
+        x = 5 + i*2.2
+        r.add_cube((x, 0, -17), (x+1.5, 1.0, -15.5), MAT_LAMBERTIAN, C_PINK)
 
     # ========== 南部 - 敏行楼 ==========
-    r.add_cube((-14, 0, 3), (14, 2.5, 10), MAT_LAMBERTIAN, (0.72, 0.30, 0.20))
-    r.add_cube((-14.2, 2.5, 2.8), (14.2, 2.8, 10.2), MAT_LAMBERTIAN, (0.65, 0.25, 0.18))
+    r.add_cube((-20, 0, -22), (20, 2.5, -18), MAT_LAMBERTIAN, C_YELLOW)
 
-    # ========== 最南部 - 学生宿舍区 ==========
-    # 左侧宿舍 (Y形简化 - 用3个立方体)
-    for row in range(3):
-        z = 12 + row * 2.5
-        for col in range(4):
-            x = -20 + col * 2.0
-            r.add_cube((x, 0, z), (x+1.5, 1.3, z+1.8), MAT_LAMBERTIAN, (0.85, 0.60, 0.58))
-    # 右侧宿舍
-    for row in range(3):
-        z = 12 + row * 2.5
-        for col in range(4):
-            x = 8 + col * 2.0
-            r.add_cube((x, 0, z), (x+1.5, 1.3, z+1.8), MAT_LAMBERTIAN, (0.85, 0.60, 0.58))
+    # ========== A区宿舍 (粉色) ==========
+    for i in range(5):
+        x = -16 + i*2.2
+        r.add_cube((x, 0, -26), (x+1.5, 1.0, -24), MAT_LAMBERTIAN, C_PINK)
+    for i in range(5):
+        x = 4 + i*2.2
+        r.add_cube((x, 0, -26), (x+1.5, 1.0, -24), MAT_LAMBERTIAN, C_PINK)
 
-    # ========== 绿化 - 树木 (绿色小球) ==========
-    for _ in range(60):
-        x = np.random.uniform(-26, 26)
-        z = np.random.uniform(-30, 20)
-        # 避开道路和建筑区域 (粗略)
-        if abs(x) < 5.5 and -28 < z < 18:  # 中央大道
+    # ========== 最南部 - Y形宿舍 ==========
+    r.add_cube((-2, 0, -28), (2, 1.2, -25), MAT_LAMBERTIAN, C_PINK)
+    r.add_cube((-8, 0, -26), (-2, 1.2, -24), MAT_LAMBERTIAN, C_PINK)
+    r.add_cube((2, 0, -26), (8, 1.2, -24), MAT_LAMBERTIAN, C_PINK)
+    r.add_cube((-6, 0, -24), (-3, 1.0, -22), MAT_LAMBERTIAN, C_PINK)
+    r.add_cube((3, 0, -24), (6, 1.0, -22), MAT_LAMBERTIAN, C_PINK)
+
+    # ========== 东侧建筑群 ==========
+    r.add_cube((22, 0, -6), (29, 2.0, -3), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((22, 0, -11), (29, 2.0, -8), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((22, 0, 2), (29, 2.0, 5), MAT_LAMBERTIAN, C_YELLOW)
+    r.add_cube((22, 0, 8), (29, 2.0, 12), MAT_LAMBERTIAN, C_YELLOW)
+
+    # ========== 西侧 - 核能研究院 ==========
+    r.add_cube((-29, 0, 8), (-22, 2.0, 14), MAT_LAMBERTIAN, C_YELLOW)
+
+    # ========== 运动场地 ==========
+    r.add_cube((20, 0.01, -20), (28, 0.05, -16), MAT_LAMBERTIAN, C_SPORT)
+    r.add_cube((-28, 0.01, -20), (-20, 0.05, -16), MAT_LAMBERTIAN, C_SPORT)
+
+    # ========== 树木 ==========
+    for _ in range(100):
+        x = np.random.uniform(-30, 30)
+        z = np.random.uniform(-27, 20)
+        road_skip = False
+        for rz in [-20, -14, -8, -2, 4, 10, 16]:
+            if abs(z - rz) < 0.6:
+                road_skip = True; break
+        for rx in [-26, -18, -10, -1.5, 1.5, 8, 16, 24]:
+            if abs(x - rx) < 1.8:
+                road_skip = True; break
+        if road_skip:
             continue
-        if -5 < z < -3 or -16 < z < -14 or 5 < z < 7:  # 横向道路
-            continue
-        if -12 < x < 12 and -24 < z < -17:  # 泓理楼
-            continue
-        if -16 < x < -4 and -12 < z < -4:  # 躬行楼
-            continue
-        if 4 < x < 16 and -12 < z < -4:  # 力行楼
-            continue
-        if -14 < x < 14 and 3 < z < 10:  # 敏行楼
-            continue
-        r.add_sphere((x, 0.25, z), np.random.uniform(0.2, 0.4),
-                     MAT_LAMBERTIAN, (0.15, 0.40 + np.random.random()*0.15, 0.15))
+        r.add_sphere((x, 0.25, z), np.random.uniform(0.2, 0.35),
+                     MAT_LAMBERTIAN, (0.12, 0.38, 0.12))
 
     # ========== 光源 ==========
-    # 主光源 (模拟阳光)
-    r.add_light((-8, 12, -5), 0.6, (6.0, 5.5, 4.5))
-    # 辅助光源
-    r.add_light((10, 8, -15), 0.4, (4.0, 4.0, 5.0))
+    r.add_light((-12, 15, 5), 0.5, (5.5, 5.0, 4.0))
+    r.add_light((12, 12, -8), 0.4, (4.0, 4.0, 5.0))
 
-    # ========== 相机 - 鸟瞰航拍视角 (更高更俯) ==========
-    r.set_camera((3, 32, 12), (0, -4, -8), (0, 1, 0), 58, 16.0/9.0, 0.0)
+    # ========== 相机 - 45度沙盘视角 ==========
+    r.set_camera((22, 32, 18), (0, 0, -6), (0, 1, 0), 58, 16.0/9.0, 0.0)
     return r, "showcase_07_innovation_harbor"
 
 
